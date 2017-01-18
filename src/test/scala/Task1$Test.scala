@@ -39,8 +39,13 @@ class Task1$Test extends FunSuite with Matchers {
 
   test("A sequence of instructions should give a final distance from the " +
     "origin to the first repeated position") {
-
-    Task1.distanceToFirstRepeat("R8, R4, R4, R8") shouldBe 4
+    // From Task
+    Task1.distanceToFirstRepeat("R8, R4, R4, R8") shouldBe Some(4)
+    // Extras
+    Task1.distanceToFirstRepeat("R2, R2, R2") shouldBe None
+    Task1.distanceToFirstRepeat("R2, R2, R2, R2") shouldBe Some(0)
+    Task1.distanceToFirstRepeat("R8, R2, R8, L2, L4, L8") shouldBe Some(6)
+    Task1.distanceToFirstRepeat("R6, R2, R8, R4, R6, R8") shouldBe Some(4)
   }
 
 }

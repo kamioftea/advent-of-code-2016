@@ -1,3 +1,5 @@
+import scala.annotation.tailrec
+
 /**
   * # Day 1: No Time for a Taxicab
   *
@@ -55,7 +57,7 @@ object Task1 {
 
   case object RIGHT extends Direction
 
-  case class Instruction(turn: Direction, distance: Int)
+  case class Instruction(direction: Direction, distance: Int)
 
   def parse(instructions: String): Seq[Instruction] = {
     val Pattern = "(L|R)(\\d+)".r
@@ -83,41 +85,67 @@ object Task1 {
 
   import Compass._
 
-  case class Position(x: Int, y: Int, facing: Facing) {
-    def move(direction: Direction, distance: Int): Position = {
-      val newFacing = turn(facing, direction)
+  case class Coordinates(x: Int, y: Int)
 
+  case class Position(x: Int, y: Int, facing: Facing) {
+    def move(direction: Direction, distance: Int): Position =
+      move(turn(facing, direction), distance)
+
+    def move(newFacing: Facing, distance: Int): Position =
       newFacing match {
         case NORTH => Position(x, y + distance, newFacing)
         case EAST => Position(x + distance, y, newFacing)
         case SOUTH => Position(x, y - distance, newFacing)
         case WEST => Position(x - distance, y, newFacing)
       }
-    }
 
-    val coordinates: (Int, Int) = (x, y)
+    val coordinates: Coordinates = Coordinates(x, y)
   }
 
   def finalDistance(instructions: String): Int =
     parse(instructions)
       .foldLeft(Position(0, 0, NORTH)) {
         case (position, instruction) =>
-          position.move(instruction.turn, instruction.distance)
+          position.move(instruction.direction, instruction.distance)
       } match {
       case Position(x, y, _) => math.abs(x) + math.abs(y)
     }
 
   def distanceToFirstRepeat(data: String): Option[Int] = {
-    def iter(pos: Position, trail: Set[(Int, Int)], instructions:
-    List[Instruction]): Option[Position] =
+    @tailrec
+    def moveStepwise(position: Position,
+                     facing: Facing,
+                     distance: Int,
+                     path: Seq[Coordinates] = Seq()): (Position, Seq[Coordinates]) =
+      distance match {
+        case 0 => (position, path)
+        case i if i < 0 =>
+          moveStepwise(position, turn(turn(facing, RIGHT), RIGHT), -distance, path)
+        case _ =>
+          val newPos = position.move(facing, 1)
+          moveStepwise(newPos, facing, distance - 1, path :+ newPos.coordinates)
+      }
+
+    @tailrec
+    def firstIntersection(trail: Set[Coordinates], path: List[Coordinates]): Either[Coordinates, Set[Coordinates]] = {
+      path match {
+        case Nil => Right(trail)
+        case h :: _ if trail.contains(h) => Left(h)
+        case h :: t => firstIntersection(trail + h, t)
+      }
+    }
+
+    @tailrec
+    def iter(pos: Position, trail: Set[Coordinates], instructions:
+    List[Instruction]): Option[Coordinates] =
       instructions match {
         case Nil => None
         case instruction :: tail =>
-          val newPos = pos.move(instruction.turn, instruction.distance)
-          if (trail.contains(newPos.coordinates))
-            Some(newPos)
-          else
-            iter(newPos, trail + pos.coordinates, tail)
+          val (newPos, path) = moveStepwise(pos, turn(pos.facing, instruction.direction), instruction.distance)
+          firstIntersection(trail, path.toList) match {
+            case Left(coordinates) => Some(coordinates)
+            case Right(newTrail) => iter(newPos, newTrail, tail)
+          }
       }
 
     iter(Position(0, 0, NORTH), Set(), parse(data).toList)
