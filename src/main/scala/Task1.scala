@@ -127,11 +127,11 @@ object Task1 {
       }
 
     @tailrec
-    def firstIntersection(trail: Set[Coordinates], path: List[Coordinates]): Either[Coordinates, Set[Coordinates]] = {
+    def firstIntersectionOrExtendedTrail(trail: Set[Coordinates], path: List[Coordinates]): Either[Coordinates, Set[Coordinates]] = {
       path match {
         case Nil => Right(trail)
         case h :: _ if trail.contains(h) => Left(h)
-        case h :: t => firstIntersection(trail + h, t)
+        case h :: t => firstIntersectionOrExtendedTrail(trail + h, t)
       }
     }
 
@@ -142,13 +142,13 @@ object Task1 {
         case Nil => None
         case instruction :: tail =>
           val (newPos, path) = moveStepwise(pos, turn(pos.facing, instruction.direction), instruction.distance)
-          firstIntersection(trail, path.toList) match {
+          firstIntersectionOrExtendedTrail(trail, path.toList) match {
             case Left(coordinates) => Some(coordinates)
             case Right(newTrail) => iter(newPos, newTrail, tail)
           }
       }
 
-    iter(Position(0, 0, NORTH), Set(), parse(data).toList)
+    iter(Position(0, 0, NORTH), Set(Coordinates(0,0)), parse(data).toList)
       .map(p => math.abs(p.x) + math.abs(p.y))
   }
 }
