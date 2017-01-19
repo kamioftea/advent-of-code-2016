@@ -1,6 +1,6 @@
 # Advent of Code 2016 - Day 2
 
-[<< Day 1](./day1)
+[<< Day 1](./day1) [Day 3 >>](./day1)
 
 ## Going to the Bathroom
 
@@ -155,12 +155,12 @@ def decodeBathroom(data: String): String = {
 
 For which all the tests passed. Also for my piece of mind I purposefully broke
 the state machine. The test that tried all the possible transformations pointed
-exactly to the transformation that was broken when I changed going right from 9 
+exactly to the transformation that was broken when I changed going right from 9
 to incorrectly result in position 8.
 
 ```
 "236987412545658899[85]6333221114477785" was not equal to "236987412545658899[96]6333221114477785"
-``` 
+```
 
 ## Task 2 - Like that, but badly designed
 
@@ -244,4 +244,4 @@ test("The diamond bathroom codes can be decoded") {
 Finally I can now apply the updated function to the test data, and it gives the
 correct answer.
 
-[<< Day 1](./day1)
+[<< Day 1](./day1) [Day 3 >>](./day1)
