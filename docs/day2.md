@@ -155,10 +155,12 @@ def decodeBathroom(data: String): String = {
 
 For which all the tests passed. Also for my piece of mind I purposefully broke
 the state machine. The test that tried all the possible transformations pointed
-exactly to the transformation that was broken
-`"236987412545658899[85]6333221114477785" was not equal to
-"236987412545658899[96]6333221114477785"` when I changed going right from 9 to
-incorrectly result in position 8.
+exactly to the transformation that was broken when I changed going right from 9 
+to incorrectly result in position 8.
+
+```
+"236987412545658899[85]6333221114477785" was not equal to "236987412545658899[96]6333221114477785"
+``` 
 
 ## Task 2 - Like that, but badly designed
 
