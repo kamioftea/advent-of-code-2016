@@ -34,3 +34,4 @@ in IntelliJ will also run as is in the REPL.
 ## The Tasks
 
 - [Day 1](./day1)
+- [Day 2](./day2)
