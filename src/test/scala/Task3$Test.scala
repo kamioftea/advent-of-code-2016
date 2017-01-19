@@ -5,7 +5,7 @@ import org.scalatest.{FunSuite, Matchers}
   */
 class Task3$Test extends FunSuite with Matchers {
 
-  test("validates correctly") {
+  test("validates triangles correctly") {
     Task3.validateTriangle(10, 10, 10) shouldBe true
 
     Task3.validateTriangle(2, 1, 1) shouldBe false
