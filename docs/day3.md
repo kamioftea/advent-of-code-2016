@@ -68,7 +68,7 @@ provided:
   with customisable window size and step length, along with modifier methods to
   deal with edge cases.
 - **Seq.transpose**: Rotate a Seq of evenly sized Seqs, so that rows become
-  columns.
+  columns. I used withPartial(false) to drop incomplete chunks.
 - **Seq.flatMap**: Merge the chunks of three Seqs back into a single iterator
 
 I extracted the code that parsed the lines into a shared method. This then
