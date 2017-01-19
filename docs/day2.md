@@ -185,6 +185,7 @@ example and a full route check.
 The first refactor is simply changing the type alias of Position, and fixing the
 type errors. The second uses another powerful feature of scala: implicit
 parameters. If I augment the signature of decodeBathroom to
+
 ```
 def decodeBathroom(data: String)(implicit stateMachine: Map[Position,Transform]): String
 ```
