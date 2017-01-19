@@ -1,3 +1,5 @@
+import scala.annotation.tailrec
+
 /**
   * --- Day 2: Bathroom Security ---
   *
@@ -29,26 +31,108 @@
   *
   * Your puzzle input is the instructions from the document you found at the front desk. What is the bathroom code?
   *
+  * --- Part Two ---
+  *
+  * You finally arrive at the bathroom (it's a several minute walk from the lobby so visitors can behold the many fancy conference rooms and water coolers on this floor) and go to punch in the code. Much to your bladder's dismay, the keypad is not at all like you imagined it. Instead, you are confronted with the result of hundreds of man-hours of bathroom-keypad-design meetings:
+  *
+  * . . 1 . .
+  * . 2 3 4 .
+  * 5 6 7 8 9
+  * . A B C .
+  * . . D . .
+  *
+  * You still start at "5" and stop when you're at an edge, but given the same instructions as above, the outcome is very different:
+  *
+  * You start at "5" and don't move at all (up and left are both edges), ending at 5.
+  * Continuing from "5", you move right twice and down three times (through "6", "7", "B", "D", "D"), ending at D.
+  * Then, from "D", you move five more times (through "D", "B", "C", "C", "B"), ending at B.
+  * Finally, after five more moves, you end at 3.
+  *
+  * So, given the actual keypad layout, the code would be 5DB3.
+  *
+  * Using the same instructions in your puzzle input, what is the correct bathroom code?
+  *
+  *
   */
 object Task2 {
 
-  sealed trait Direction {
-    def unapply(arg: Char): Option[Direction] = {
-      case 'U' => UP
-      case 'R' => RIGHT
-      case 'D' => DOWN
-      case 'L' => LEFT
+  sealed trait Direction
+
+  object Direction {
+    def unapply(arg: Char): Option[Direction] = arg match {
+      case 'U' => Some(UP)
+      case 'R' => Some(RIGHT)
+      case 'D' => Some(DOWN)
+      case 'L' => Some(LEFT)
+      case _ => None
     }
   }
 
-  case object UP
+  case object UP extends Direction
 
-  case object RIGHT
+  case object RIGHT extends Direction
 
-  case object DOWN
+  case object DOWN extends Direction
 
-  case object LEFT
+  case object LEFT extends Direction
 
-  def decodeBathroom(data: String): String = ???
+  type Position = Char
+
+  type Transform = Direction => Position
+
+  def buildTransform(u: Position, r: Position, d: Position, l: Position): Transform = {
+    case UP => u
+    case RIGHT => r
+    case DOWN => d
+    case LEFT => l
+  }
+
+  val keyPadStateMachine: Map[Position, Transform] = Map(
+    '1' -> buildTransform('1', '2', '4', '1'),
+    '2' -> buildTransform('2', '3', '5', '1'),
+    '3' -> buildTransform('3', '3', '6', '2'),
+    '4' -> buildTransform('1', '5', '7', '4'),
+    '5' -> buildTransform('2', '6', '8', '4'),
+    '6' -> buildTransform('3', '6', '9', '5'),
+    '7' -> buildTransform('4', '8', '7', '7'),
+    '8' -> buildTransform('5', '9', '8', '7'),
+    '9' -> buildTransform('6', '9', '9', '8')
+  )
+
+  val diamondStateMachine: Map[Position, Transform] = Map(
+    '1' -> buildTransform('1', '1', '3', '1'),
+    '2' -> buildTransform('2', '3', '6', '2'),
+    '3' -> buildTransform('1', '4', '7', '2'),
+    '4' -> buildTransform('4', '4', '8', '3'),
+    '5' -> buildTransform('5', '6', '5', '5'),
+    '6' -> buildTransform('2', '7', 'A', '5'),
+    '7' -> buildTransform('3', '8', 'B', '6'),
+    '8' -> buildTransform('4', '9', 'C', '7'),
+    '9' -> buildTransform('9', '9', '9', '8'),
+    'A' -> buildTransform('6', 'B', 'A', 'A'),
+    'B' -> buildTransform('7', 'C', 'D', 'A'),
+    'C' -> buildTransform('8', 'C', 'C', 'B'),
+    'D' -> buildTransform('B', 'D', 'D', 'D')
+  )
+
+  def decodeBathroom(data: String)(implicit stateMachine: Map[Position, Transform]): String = {
+    @tailrec
+    def iter(characters: Stream[Char], output: String = "", position: Position = '5'): String =
+      characters match {
+        case Stream.Empty =>
+          output + position
+
+        case '\n' #:: chars =>
+          iter(chars, output + position, position)
+
+        case Direction(d) #:: chars =>
+          iter(chars, output, stateMachine(position)(d))
+
+        case _ #:: chars =>
+          iter(chars, output, position)
+      }
+
+    iter(data.toStream)
+  }
 
 }

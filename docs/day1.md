@@ -1,5 +1,7 @@
 # Advent of Code 2016 - Day 1
 
+[>> Day 2](./day2)
+
 ## Initialisation
 
 Today I'm starting from a blank slate, so first of all I need to create a
@@ -390,3 +392,5 @@ iter(Position(0, 0, NORTH), Set(Coordinates(0,0)), parse(data).toList)
 
 This passed all tests, and when run with the actual data gave the correct
 answer.
+
+[>> Day 2](./day2)
