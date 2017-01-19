@@ -23,7 +23,7 @@ writing a three way if/else statement to cover the three possible maximums, but
 settled on a method that returned the solution if the first number was a
 maximum, otherwise rotated the triangle and tried again.
 
-```
+```scala
 def validateTriangle(a: Int, b: Int, c: Int): Boolean = {
   if (a >= b && a >= c) a < b + c
   else validateTriangle(b, c, a)
@@ -37,7 +37,7 @@ Parsing the rows and counting the valid triangles was made very simple by scala'
   elements that don't have a mapping in the function. Note that scala can automatically convert an incomplete pattern match into a PartialFunction.
 - **Seq.count**: Return the number of elements that match a predicate.
 
-```
+```scala
 val ParsableLine: Regex ="""\s*(\d+)\s+(\d+)\s+(\d+)\s*""".r
 
 def countPossibleTriangles(data: String): Int =
@@ -76,7 +76,7 @@ required mapping the 3-Tuples of edge lengths into the sequences that transpose
 needed to work with. The count was also updated to match the changed format of
 the data.
 
-```
+```scala
 def countPossibleTrianglesVertically(data: String): Int =
   parseData(data)
     .map { case (a, b, c) => List(a, b, c) }
