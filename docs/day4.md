@@ -20,5 +20,10 @@ object Task4 {
 
 ```
 
+```scala
+Task4.findSectorId(input, "north")
+  .foreach(r => println(s"${r.roomName} ${r.sectorID}"))
+```
+
 
 [<< Day 3](./day3) | [Home](./) 
