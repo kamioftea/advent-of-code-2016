@@ -1,6 +1,6 @@
 # Advent of Code 2016 - Day 2
 
-[<< Day 1](./day1) [Day 3 >>](./day1)
+[<< Day 1](./day1) | [Home](./) | [Day 3 >>](./day3)
 
 ## Going to the Bathroom
 
@@ -244,4 +244,4 @@ test("The diamond bathroom codes can be decoded") {
 Finally I can now apply the updated function to the test data, and it gives the
 correct answer.
 
-[<< Day 1](./day1) [Day 3 >>](./day1)
+[<< Day 1](./day1) [Home](./) [Day 3 >>](./day3)

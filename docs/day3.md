@@ -1,6 +1,6 @@
 # Advent of Code 2016 - Day 3
 
-[<< Day 2](./day2)
+[<< Day 2](./day2) | [Home](./) | [Day 4 >>](./day4)
 
 ## Triangles
 
@@ -88,4 +88,4 @@ def countPossibleTrianglesVertically(data: String): Int =
 All the tests were green, and the correct answer was generated. All in all a
 pretty easy day.
 
-[<< Day 2](./day2)
+[<< Day 2](./day2) | [Home](./) | [Day 4 >>](./day4)

@@ -1,6 +1,6 @@
 # Advent of Code 2016 - Day 1
 
-[Day 2 >>](./day2)
+[Home](./) | [Day 2 >>](./day2)
 
 ## Initialisation
 
@@ -393,4 +393,4 @@ iter(Position(0, 0, NORTH), Set(Coordinates(0,0)), parse(data).toList)
 This passed all tests, and when run with the actual data gave the correct
 answer.
 
-[Day 2 >>](./day2)
+[Home](./) | [Day 2 >>](./day2)
