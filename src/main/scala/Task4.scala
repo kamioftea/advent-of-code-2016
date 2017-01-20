@@ -55,7 +55,7 @@ object Task4 {
     lazy val calculatedChecksum: String =
       encryptedName
         .replace("-", "")
-        .groupBy(c => c)
+        .groupBy(identity)
         .mapValues(_.length).toSeq
         .sortBy { case (char, count) => (-count, char) }
         .take(5)
