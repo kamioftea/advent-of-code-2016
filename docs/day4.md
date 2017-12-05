@@ -4,7 +4,7 @@
 
 ## Checking "Sums"
 
-Today's main theme was string manipulation, along with reusing some of yesteday's
+Today's main theme was string manipulation, along with reusing some of yesterday's
 filtering. The data was a list of strings, to be parsed into an encrypted name (more 
 on that later), a numeric id, and a check string. The lines that were valid had a 
 check string built from the characters in the encrypted name ordered by frequency. 
