@@ -12,12 +12,12 @@ object Day1 {
 
 
   def sumDuplicates(input: String): Int = {
-    val pairs =
-      input.toCharArray
-        .toList
+    val digits: Array[Int] =
+      input
+        .toCharArray
         .map(_.asDigit)
-        .sliding(2).toList
-        .map { case a :: b :: _ => (a, b) }
+
+    val pairs: List[(Int, Int)] = (digits, digits.tail).zipped.toList
 
 
     ((input.head.asDigit, input.last.asDigit) :: pairs)

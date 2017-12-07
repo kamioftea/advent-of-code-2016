@@ -24,14 +24,14 @@ object Day6 {
     val source = buckets.indexOf(max)
     val start = (source + 1) % buckets.length
     val finish = (start + (max % buckets.length)) % buckets.length
-    val test: Int => Boolean =
+    val shouldGetMore: Int => Boolean =
       if (start <= finish) i => i >= start && i < finish
       else i => i >= start || i < finish
 
     buckets
       .updated(source, 0)
       .zipWithIndex
-      .map { case (b, i) => b + (max / buckets.length) + (if (test(i)) 1 else 0) }
+      .map { case (b, i) => b + (max / buckets.length) + (if (shouldGetMore(i)) 1 else 0) }
   }
 }
 
