@@ -47,13 +47,13 @@ object Day7 {
       (
         totalWeight,
         groups
-          .find { case (_, ns) => ns.size == 1 }
+          .find { case (_, ns) => ns.lengthCompare(1) == 0 }
           .map { case (cW, (c_ref, (_, maybeNode)) :: _) => maybeNode.getOrElse({
             val childNode = nodes(c_ref)
             (
               childNode,
               groups
-              .find { case (_, ns) => ns.size > 1 }
+              .find { case (_, ns) => ns.lengthCompare(1) > 0 }
               .map { case (w, _) => childNode.weight.getOrElse(0) - cW + w }
               .getOrElse(0)
             )
