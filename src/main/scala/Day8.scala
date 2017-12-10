@@ -56,21 +56,23 @@ object Day8 {
   }
 
   object Instruction {
-    private val LineParser = "([a-z]+) (inc|dec) (-?\\d+) if ([a-z]+) ([!<>=]{1,2}) (-?\\d+)".r
+    private val LineParser =
+      "([a-z]+) (inc|dec) (-?\\d+) if ([a-z]+) ([!<>=]{1,2}) (-?\\d+)".r
 
     def fromLine(line: String): Try[Instruction] = {
       line match {
-        case LineParser(register, operator, value, conditionRegister, condition, conditionValue) =>
+        case LineParser(reg, op, value, condReg, cond, condVal) =>
           Success(Instruction(
-            register,
-            if (operator == "inc") Inc else Dec,
+            reg,
+            if (op == "inc") Inc else Dec,
             value.toInt,
-            conditionRegister,
-            Condition.fromString(condition),
-            conditionValue.toInt
+            condReg,
+            Condition.fromString(cond),
+            condVal.toInt
           ))
 
-        case _ => Failure(new RuntimeException("line was not a valid instruction"))
+        case _ =>
+          Failure(new RuntimeException("line was not a valid instruction"))
       }
     }
   }
@@ -88,21 +90,29 @@ object Day8 {
         registers
   }
 
-  def applyInstructions(registers: Map[RegisterRef, Int], instructions: TraversableOnce[Instruction]): Map[RegisterRef, Int] =
-    instructions.foldLeft(registers){ case (rs, ins) => ins(rs) }
+  def applyInstructions(registers: Map[RegisterRef, Int],
+                        instructions: TraversableOnce[Instruction]
+                       ): Map[RegisterRef, Int] =
+    instructions.foldLeft(registers) { case (rs, ins) => ins(rs) }
 
   def findMax(registers: Map[RegisterRef, Int]): (RegisterRef, Int) =
-    if(registers.isEmpty) ("", Int.MinValue) else registers.maxBy{ case (_, v) => v }
+    if (registers.isEmpty)
+      ("", Int.MinValue)
+    else
+      registers.maxBy { case (_, v) => v }
 
-  def findProcessingMax(registers: Map[RegisterRef, Int], instructions: TraversableOnce[Instruction]): Int =
-    instructions.foldLeft((Int.MinValue, registers)){
+  def findProcessingMax(registers: Map[RegisterRef, Int],
+                        instructions: TraversableOnce[Instruction]
+                       ): Int =
+    instructions.foldLeft((Int.MinValue, registers)) {
       case ((max, rs), ins) =>
-        val newRs =  ins(rs)
+        val newRs = ins(rs)
         (Math.max(max, findMax(newRs)._2), newRs)
     }._1
 
   def main(args: Array[String]): Unit = {
     val registers = Map.empty[RegisterRef, Int].withDefaultValue(0)
+
     def instructions: Iterator[Instruction] =
       Source.fromResource("day8input.txt")
         .getLines()

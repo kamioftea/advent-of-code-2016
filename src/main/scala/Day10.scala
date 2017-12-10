@@ -1,39 +1,45 @@
+import scala.annotation.tailrec
+
 object Day10 {
 
+  @tailrec
   def hashRound(lengths: List[Int],
                 hash: Vector[Int],
                 position: Int = 0,
                 skipSize: Int = 0): (Vector[Int], Int, Int) = {
     lengths match {
       case Nil => (hash, position, skipSize)
-      case h :: t if position + h < hash.length =>
-        val (pre, rest) = hash.splitAt(position)
-        val (mid, post) = rest.splitAt(h)
-
-        hashRound(
-          t,
-          pre ++ mid.reverse ++ post,
-          (position + h + skipSize) % hash.length,
-          skipSize + 1
-        )
-
       case h :: t =>
-        val (rest, end) = hash.splitAt(position)
-        val (start, mid) = rest.splitAt((position + h) % hash.length)
-        val (rEnd, rStart) = (end ++ start).reverse.splitAt(end.length)
+        val newHash =
+          if (position + h < hash.length) {
+            val (pre, rest) = hash.splitAt(position)
+            val (mid, post) = rest.splitAt(h)
+
+            pre ++ mid.reverse ++ post
+          }
+          else {
+            val (rest, end) = hash.splitAt(position)
+            val (start, mid) = rest.splitAt((position + h) % hash.length)
+            val (rEnd, rStart) = (end ++ start).reverse.splitAt(end.length)
+
+            rStart ++ mid ++ rEnd
+          }
 
         hashRound(
           t,
-          rStart ++ mid ++ rEnd,
+          newHash,
           (position + h + skipSize) % hash.length,
           skipSize + 1
         )
     }
   }
 
-  def hash(lengths: List[Int], listSize: Int, position: Int = 0, skipSize: Int = 0): Vector[Int] = {
+  def hash(lengths: List[Int],
+           listSize: Int,
+           position: Int = 0,
+           skipSize: Int = 0): Vector[Int] =
     hashRound(lengths, Vector.range(0, listSize))._1
-  }
+
 
   def knotHash(input: String, listSize: Int = 256): String = {
     val lengths = input.toList.map(_.toInt) ++ List(17, 31, 73, 47, 23)

@@ -1,7 +1,9 @@
+import scala.annotation.tailrec
 import scala.io.Source
 
 object Day4 {
 
+  @tailrec
   def isValid(words: List[String], seen: Set[String] = Set.empty): Boolean =
     words match {
       case Nil => true
@@ -18,10 +20,17 @@ object Day4 {
   def isReallyValid(passphrase: String): Boolean =
     isValid(passphrase.split(" ").toList.map(s => s.sorted))
 
-  def countReallyValid(passphrases: Seq[String]): Int = passphrases.count(isReallyValid)
-}
+  def countReallyValid(passphrases: Seq[String]): Int =
+    passphrases.count(isReallyValid)
 
-object RunDay4 extends App {
-  println(Day4.countValid(Source.fromResource("day4input.txt").getLines().toSeq))
-  println(Day4.countReallyValid(Source.fromResource("day4input.txt").getLines().toSeq))
+  def main(args: Array[String]): Unit = {
+    println(
+      countValid(Source.fromResource("day4input.txt").getLines().toSeq)
+    )
+
+    println(
+      countReallyValid(Source.fromResource("day4input.txt").getLines().toSeq)
+    )
+  }
+
 }

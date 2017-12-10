@@ -1,3 +1,4 @@
+import scala.annotation.tailrec
 import scala.io.Source
 
 object Day9 {
@@ -71,27 +72,33 @@ object Day9 {
 
   def parseStream(chars: Stream[Char]): Stream[State] = {
 
-    lazy val states: Stream[State] = ExpectOpen #:: states.zip(chars).map { case (s, c) => s(c) }
+    lazy val states: Stream[State] =
+      ExpectOpen #:: states.zip(chars).map { case (s, c) => s(c) }
 
     states
   }
 
   def scoreGroups(states: Stream[State]): Int = {
-    def iter(states: Stream[State], depth: Int = 0, score: Int = 0): Int = states match {
-      case Stream.Empty => score
-      case StartGroup #:: tail => iter(tail, depth + 1, score)
-      case CloseGroup #:: tail => iter(tail, depth - 1, score + depth)
-      case _ #:: tail => iter(tail, depth, score)
-    }
+    @tailrec
+    def iter(states: Stream[State], depth: Int = 0, score: Int = 0): Int =
+      states match {
+        case Stream.Empty => score
+        case StartGroup #:: tail => iter(tail, depth + 1, score)
+        case CloseGroup #:: tail => iter(tail, depth - 1, score + depth)
+        case _ #:: tail => iter(tail, depth, score)
+      }
 
     iter(states)
   }
 
-  def countGarbageChars(states: Stream[State]): Int = states.count(_ == InGarbage)
+  def countGarbageChars(states: Stream[State]): Int =
+    states.count(_ == InGarbage)
 
   def main(args: Array[String]): Unit = {
-    println(scoreGroups(parseStream(Source.fromResource("day9input.txt").toStream)))
-    println(countGarbageChars(parseStream(Source.fromResource("day9input.txt").toStream)))
+    def input = Source.fromResource("day9input.txt").toStream
+
+    println(scoreGroups(parseStream(input)))
+    println(countGarbageChars(parseStream(input)))
   }
 
 }
