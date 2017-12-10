@@ -38,23 +38,23 @@ object Day10 {
   def knotHash(input: String, listSize: Int = 256): String = {
     val lengths = input.toList.map(_.toInt) ++ List(17, 31, 73, 47, 23)
     val (sparseHash, _, _) =
-      List.fill(64)(0)
+      (0 until 64)
         .foldLeft((Vector.range(0, listSize), 0, 0)) {
           case ((h, p, s), _) => hashRound(lengths, h, p, s)
         }
 
     sparseHash
-      .sliding(16, 16)
-      .map(chunk => chunk.reduce(_ ^ _))
+      .grouped(16)
+      .map(_.reduce(_ ^ _))
       .map("%02x".format(_))
-      .reduce(_ + _)
+      .mkString
   }
 
   def main(args: Array[String]): Unit = {
     val input = "197,97,204,108,1,29,5,71,0,50,2,255,248,78,254,63"
 
     val output = hash(input.split(",").map(_.toInt).toList, 256)
-    println(s"${output(0) * output(1)}, $output")
+    println(output(0) * output(1))
 
     println(knotHash(input))
   }
