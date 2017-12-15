@@ -1,3 +1,5 @@
+import java.time.LocalDateTime
+
 import scala.annotation.tailrec
 import scala.io.Source
 
@@ -17,7 +19,7 @@ object Day5 {
     iter(offsets.toVector)
   }
 
-  def countMovesVariant(offsets: Seq[Int]): Int = {
+  def countMovesWithConvergence(offsets: Seq[Int]): Int = {
     @tailrec
     def iter(os: Vector[Int], count: Int = 0, position: Int = 0): Int =
       if (!os.isDefinedAt(position)) count
@@ -36,10 +38,14 @@ object Day5 {
   }
 
   def main(args: Array[String]): Unit = {
-    def input = Source.fromResource("Day5.txt").getLines().map(_.toInt).toSeq
+    println(LocalDateTime.now())
+    def input = Source.fromResource("Day5input.txt").getLines().map(_.toInt).toSeq
 
+    println(LocalDateTime.now())
     println(countMoves(input))
-    println(countMovesVariant(input))
+    println(LocalDateTime.now())
+    println(countMovesWithConvergence(input))
+    println(LocalDateTime.now())
   }
 
 }

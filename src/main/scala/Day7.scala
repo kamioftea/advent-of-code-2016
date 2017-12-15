@@ -39,9 +39,9 @@ object Day7 {
       case (map, _) => map
     }
 
-  def findRoot(nodes: TraversableOnce[Node]): Option[Node] = {
+  def findRoot(nodes: TraversableOnce[Node]): Option[Node] =
     nodes.find(n => n.parent.isEmpty)
-  }
+
 
   def findMismatchedNode(nodes: Map[NodeRef, Node]): Option[(Node, Int)] = {
     def iter(node: Node): (Int, Option[(Node, Int)]) = {
@@ -63,14 +63,11 @@ object Day7 {
                 val childNode = nodes(c_ref)
                 (
                   childNode,
-                  groups
-                    .find {
-                      case (_, ns) => ns.lengthCompare(1) > 0
-                    }
-                    .map {
-                      case (w, _) => childNode.weight.getOrElse(0) - cW + w
-                    }
-                    .getOrElse(0)
+                  groups.find {
+                    case (_, ns) => ns.lengthCompare(1) > 0
+                  }.map {
+                    case (w, _) => childNode.weight.getOrElse(0) - cW + w
+                  }.getOrElse(0)
                 )
               })
           }
@@ -87,16 +84,10 @@ object Day7 {
   }
 
   def main(args: Array[String]): Unit = {
-    println(
-      findRoot(
-        parseInput(Source.fromResource("day7input.txt").getLines()).values
-      )
+    val input = parseInput(Source.fromResource("day7input.txt").getLines())
+    println(findRoot(input.values).get.name
     )
-    println(
-      findMismatchedNode(
-        parseInput(Source.fromResource("day7input.txt").getLines())
-      )
-    )
+    println(findMismatchedNode(input).get._2)
   }
 }
 

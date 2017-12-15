@@ -1,4 +1,4 @@
-import Day7.Node
+import Day7._
 import org.scalatest.{FunSuite, Matchers}
 
 class Day7Test extends FunSuite with Matchers {
@@ -38,7 +38,7 @@ class Day7Test extends FunSuite with Matchers {
 
   test("testParseInput") {
 
-    val parsedSubSample1: Map[String, Node] = Day7.parseInput(subSample1)
+    val parsedSubSample1: Map[String, Node] = parseInput(subSample1)
 
     parsedSubSample1.size shouldBe 4
     parsedSubSample1.get("xhth") shouldBe Some(Node("xhth", Some(57), Some("fwft")))
@@ -46,7 +46,7 @@ class Day7Test extends FunSuite with Matchers {
     parsedSubSample1.get("fwft") shouldBe Some(Node("fwft", Some(72), None, Set("xhth", "ktlj", "cntj")))
     parsedSubSample1.get("cntj") shouldBe Some(Node("cntj", Some(57), Some("fwft")))
 
-    val parsedSubSample2: Map[String, Node] = Day7.parseInput(subSample2)
+    val parsedSubSample2: Map[String, Node] = parseInput(subSample2)
 
     parsedSubSample2.size shouldBe 4
     parsedSubSample2.get("pbga") shouldBe Some(Node("pbga", Some(67), Some("padx")))
@@ -54,14 +54,14 @@ class Day7Test extends FunSuite with Matchers {
     parsedSubSample2.get("padx") shouldBe Some(Node("padx", Some(45), None, Set("pbga", "havc", "qoyq")))
     parsedSubSample2.get("qoyq") shouldBe Some(Node("qoyq", Some(66), Some("padx")))
 
-    val parsedSubSample3: Map[String, Node] = Day7.parseInput(subSample3)
+    val parsedSubSample3: Map[String, Node] = parseInput(subSample3)
 
     parsedSubSample3.size shouldBe 3
     parsedSubSample3.get("ebii") shouldBe Some(Node("ebii", Some(61), Some("ugmlq")))
     parsedSubSample3.get("gyxo") shouldBe Some(Node("gyxo", Some(61), Some("ugmlq")))
     parsedSubSample3.get("ugmlq") shouldBe Some(Node("ugmlq", Some(68), None, Set("ebii", "gyxo")))
 
-    val parsedSample: Map[String, Node] = Day7.parseInput(sample)
+    val parsedSample: Map[String, Node] = parseInput(sample)
 
     parsedSample.size shouldBe 13
     parsedSample.get("xhth") shouldBe Some(Node("xhth", Some(57), Some("fwft")))
@@ -80,17 +80,17 @@ class Day7Test extends FunSuite with Matchers {
   }
 
   test("testFindRoot") {
-    Day7.findRoot(Day7.parseInput(subSample1).map { case (_, v) => v }).map(n => n.name) shouldBe Some("fwft")
-    Day7.findRoot(Day7.parseInput(subSample2).values).map(n => n.name) shouldBe Some("padx")
-    Day7.findRoot(Day7.parseInput(subSample3).values).map(n => n.name) shouldBe Some("ugmlq")
-    Day7.findRoot(Day7.parseInput(sample).values).map(n => n.name) shouldBe Some("tknk")
+    findRoot(parseInput(subSample1).map { case (_, v) => v }).map(n => n.name) shouldBe Some("fwft")
+    findRoot(parseInput(subSample2).values).map(n => n.name) shouldBe Some("padx")
+    findRoot(parseInput(subSample3).values).map(n => n.name) shouldBe Some("ugmlq")
+    findRoot(parseInput(sample).values).map(n => n.name) shouldBe Some("tknk")
   }
 
   test("testFindMismatchedWeight") {
-    Day7.findMismatchedNode(Day7.parseInput(subSample2)) shouldBe
+    findMismatchedNode(parseInput(subSample2)) shouldBe
     Some((Node("pbga", Some(67), Some("padx")), 66))
 
-    Day7.findMismatchedNode(Day7.parseInput(sample)) shouldBe
+    findMismatchedNode(parseInput(sample)) shouldBe
     Some((Node("ugml", Some(68), Some("tknk"), Set("ebii", "gyxo", "jptl")), 60))
   }
 

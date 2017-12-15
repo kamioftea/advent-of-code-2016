@@ -4,33 +4,30 @@ import scala.io.Source
 object Day4 {
 
   @tailrec
-  def isValid(words: List[String], seen: Set[String] = Set.empty): Boolean =
+  private def iterSecure(words: List[String], seen: Set[String] = Set.empty): Boolean =
     words match {
       case Nil => true
       case word :: _ if seen.contains(word) => false
-      case word :: rest => isValid(rest, seen + word)
+      case word :: rest => iterSecure(rest, seen + word)
     }
 
-  def isValid(passphrase: String): Boolean = {
-    isValid(passphrase.split(" ").toList, Set.empty)
+  def isSecure(passphrase: String): Boolean = {
+    iterSecure(passphrase.split(" ").toList, Set.empty)
   }
 
-  def countValid(passphrases: Seq[String]): Int = passphrases.count(isValid)
+  def countSecure(passphrases: Seq[String]): Int = passphrases.count(isSecure)
 
-  def isReallyValid(passphrase: String): Boolean =
-    isValid(passphrase.split(" ").toList.map(s => s.sorted))
+  def isReallySecure(passphrase: String): Boolean =
+    iterSecure(passphrase.split(" ").toList.map(s => s.sorted))
 
-  def countReallyValid(passphrases: Seq[String]): Int =
-    passphrases.count(isReallyValid)
+  def countReallySecure(passphrases: Seq[String]): Int =
+    passphrases.count(isReallySecure)
 
   def main(args: Array[String]): Unit = {
-    println(
-      countValid(Source.fromResource("day4input.txt").getLines().toSeq)
-    )
+    val input = Source.fromResource("day4input.txt").getLines().toSeq
 
-    println(
-      countReallyValid(Source.fromResource("day4input.txt").getLines().toSeq)
-    )
+    println(countSecure(input))
+    println(countReallySecure(input))
   }
 
 }

@@ -88,6 +88,13 @@ object Day8 {
         registers.updated(register, operator(registers(register), value))
       else
         registers
+
+    def apply(registers: Map[RegisterRef, Int], max: Int): (Map[RegisterRef, Int], Int) =
+      if (condition.test(registers(conditionRegister), conditionValue)) {
+        val newVal = operator(registers(register), value)
+        (registers.updated(register, newVal), Math.max(max, newVal))
+      }
+      else (registers, max)
   }
 
   def applyInstructions(registers: Map[RegisterRef, Int],
@@ -104,11 +111,9 @@ object Day8 {
   def findProcessingMax(registers: Map[RegisterRef, Int],
                         instructions: TraversableOnce[Instruction]
                        ): Int =
-    instructions.foldLeft((Int.MinValue, registers)) {
-      case ((max, rs), ins) =>
-        val newRs = ins(rs)
-        (Math.max(max, findMax(newRs)._2), newRs)
-    }._1
+    instructions.foldLeft((registers, Int.MinValue)) {
+      case ((rs, max), ins) => ins(rs, max)
+    }._2
 
   def main(args: Array[String]): Unit = {
     val registers = Map.empty[RegisterRef, Int].withDefaultValue(0)
