@@ -1,4 +1,5 @@
-import akka.typed.ActorSystem
+import Day18.Instruction
+import akka.typed.{ActorRef, ActorSystem, Behavior}
 import akka.typed.scaladsl.Actor
 
 import scala.io.Source
@@ -61,17 +62,98 @@ object Day18 {
     iter(Map.empty.withDefaultValue(0), 0, None)
   }
 
-  sealed trait Message
 
-  def program = Actor.immutable[Message] { (ctx, msg) =>
-
-  }
+//  def program = Actor.immutable[Message] { (ctx, msg) =>
+//
+//  }
 
   def main(args: Array[String]): Unit = {
     val program = parseLines(Source.fromResource("day18input.txt").getLines().filter(l => l.matches(LineMatcher.regex)))
 
     println(getRcv(program))
 
-    val system: ActorSystem[Day18.Message] = ActorSystem()
+    //val system: ActorSystem[Day18.Message] = ActorSystem()
   }
+}
+
+object Program {
+
+  sealed trait Message
+
+  case class Start(pair: ActorRef[Message]) extends Message
+
+  case class Send(value: Long) extends Message
+
+  case object Waiting extends Message
+
+  case object Terminated extends Message
+
+  def behavior(pid: Int, program: Vector[Instruction]): Behavior[Message] = {
+
+    private case class State(registers: Map[Char, Long], position: Int, pairedWith: ActorRef[Message], sentCount: Int)
+
+    def run(state: State): Behavior[Message] =
+      if (!program.isDefinedAt(state.position)) {
+        state.pairedWith ! Terminated
+        println(s"Program $pid Terminated, sent count: ${state.sentCount}")
+        Actor.stopped
+      }
+      else program(state.position) match {
+        case Instruction("snd", r, _) =>
+          state.pairedWith ! Send(state.registers(r))
+          run(state.copy(position = state.position + 1, sentCount = state.sentCount + 1))
+        case Instruction("set", r, v) =>
+          run(state.copy(
+            registers = state.registers.updated(r, v.getValue(state.registers)),
+            position = state.position + 1
+          ))
+        case Instruction("add", r, v) =>
+          run(state.copy(
+            registers = state.registers.updated(r, state.registers(r) + v.getValue(state.registers)),
+            position = state.position + 1
+          ))
+        case Instruction("mul", r, v) =>
+          run(state.copy(
+            registers = state.registers.updated(r, state.registers(r) * v.getValue(state.registers)),
+            position = state.position + 1
+          ))
+        case Instruction("mod", r, v) =>
+          run(state.copy(
+            registers = state.registers.updated(r, state.registers(r) % v.getValue(state.registers)),
+            position = state.position + 1
+          ))
+        case Instruction("jgz", r, v) if state.registers(r) > 0 =>
+          run(state.copy(position = state.position + v.getValue(state.registers).toInt))
+        case Instruction("jgz", _, _) =>
+          run(state)
+        case Instruction("rcv", r, _) =>
+          awaitMsg(state, r)
+      }
+
+    def awaitMsg(state: State, target: Char, seenWaiting: Boolean = false): Behavior[Message] =
+      Actor.immutable[Message] { (_, msg) =>
+        msg match {
+          case Send(value) => run(state.copy(registers = state.registers.updated(target, value)))
+          case Waiting if seenWaiting =>
+            state.pairedWith ! Terminated
+            println(s"Program $pid Terminated, sent count: ${state.sentCount}")
+            Actor.stopped
+          case Waiting =>
+            state.pairedWith ! Waiting
+            awaitMsg(state, target, seenWaiting = true)
+          case Terminated =>
+            println(s"Program $pid Terminated, sent count: ${state.sentCount}")
+            Actor.stopped
+        }
+      }
+
+    Actor.immutable[Message] { (_, msg) =>
+      msg match {
+        case Start(pair) => run(State(Map('p' -> pid).withDefaultValue(0), 0, pair, 0))
+        case _ => Actor.same
+      }
+
+    }
+  }
+
 }
