@@ -1,6 +1,8 @@
+import akka.typed.ActorSystem
+import akka.typed.scaladsl.Actor
+
 import scala.io.Source
-
-
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object Day18 {
 
@@ -59,9 +61,17 @@ object Day18 {
     iter(Map.empty.withDefaultValue(0), 0, None)
   }
 
+  sealed trait Message
+
+  def program = Actor.immutable[Message] { (ctx, msg) =>
+
+  }
+
   def main(args: Array[String]): Unit = {
     val program = parseLines(Source.fromResource("day18input.txt").getLines().filter(l => l.matches(LineMatcher.regex)))
 
     println(getRcv(program))
+
+    val system: ActorSystem[Day18.Message] = ActorSystem()
   }
 }

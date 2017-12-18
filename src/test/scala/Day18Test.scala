@@ -1,4 +1,5 @@
 import Day18._
+
 import org.scalatest.{FunSuite, Matchers}
 
 class Day18Test extends FunSuite with Matchers {
@@ -56,5 +57,4 @@ class Day18Test extends FunSuite with Matchers {
       Instruction("jgz", 'a', Literal(-2))
     )) shouldBe Some(4)
   }
-
 }
