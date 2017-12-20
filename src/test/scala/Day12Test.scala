@@ -1,8 +1,9 @@
+import Day12._
 import org.scalatest.{FunSuite, Matchers}
 
 class Day12Test extends FunSuite with Matchers {
   test("Can parse input") {
-    Day12.parseInput(
+    parseInput(
       """0 <-> 2
         |1 <-> 1
         |2 <-> 0, 3, 4
@@ -22,7 +23,7 @@ class Day12Test extends FunSuite with Matchers {
   }
 
   test("Can find size of cluster") {
-    Day12.clusterWith(
+    clusterWith(
       0,
       Vector(
         Set(2),
@@ -35,7 +36,7 @@ class Day12Test extends FunSuite with Matchers {
       )
     ).size shouldBe 6
 
-    Day12.clusterWith(
+    clusterWith(
       0,
       Vector(
         Set(2),
@@ -48,7 +49,7 @@ class Day12Test extends FunSuite with Matchers {
       )
     ).size shouldBe 4
 
-    Day12.clusterWith(
+    clusterWith(
       0,
       Vector(
         Set(2),
@@ -61,7 +62,7 @@ class Day12Test extends FunSuite with Matchers {
       )
     ).size shouldBe 4
 
-    Day12.clusterWith(
+    clusterWith(
       0,
       Vector(
         Set(2),
@@ -74,7 +75,7 @@ class Day12Test extends FunSuite with Matchers {
       )
     ).size shouldBe 4
 
-    Day12.clusterWith(
+    clusterWith(
       1,
       Vector(
         Set(2),
@@ -89,7 +90,7 @@ class Day12Test extends FunSuite with Matchers {
   }
 
   test("Can count clusters") {
-    Day12.countClusters(
+    countClusters(
       Vector(
         Set(2),
         Set(1),
@@ -101,27 +102,27 @@ class Day12Test extends FunSuite with Matchers {
       )
     ) shouldBe 2
 
-    Day12.countClusters(
+    countClusters(
       Vector(
         Set(0)
       )
     ) shouldBe 1
 
-    Day12.countClusters(
+    countClusters(
       Vector(
         Set(1),
         Set(0)
       )
     ) shouldBe 1
 
-    Day12.countClusters(
+    countClusters(
       Vector(
         Set(0),
         Set(1)
       )
     ) shouldBe 2
 
-    Day12.countClusters(
+    countClusters(
       Vector(
         Set(1, 2),
         Set(0),
@@ -129,7 +130,7 @@ class Day12Test extends FunSuite with Matchers {
       )
     ) shouldBe 1
 
-    Day12.countClusters(
+    countClusters(
       Vector(
         Set(0),
         Set(1),
@@ -137,7 +138,7 @@ class Day12Test extends FunSuite with Matchers {
       )
     ) shouldBe 3
 
-    Day12.countClusters(
+    countClusters(
       Vector(
         Set(2),
         Set(6),
@@ -149,7 +150,7 @@ class Day12Test extends FunSuite with Matchers {
       )
     ) shouldBe 2
 
-    Day12.countClusters(
+    countClusters(
       Vector(
         Set(2),
         Set(1),
@@ -161,7 +162,7 @@ class Day12Test extends FunSuite with Matchers {
       )
     ) shouldBe 3
 
-    Day12.countClusters(
+    countClusters(
       Vector(
         Set(2),
         Set(3),

@@ -19,15 +19,15 @@ object Day12 {
     iter(edges(root).toSeq, BitSet(root))
   }
 
-  def countClusters(edges: Vector[Set[Int]]): Int = {
-    def iter(toProcess: Seq[Int], matches: BitSet, count: Int): Int = toProcess match {
-      case Nil => count
-      case e +: es if matches.contains(e) => iter(es, matches, count)
-      case e +: es => iter(es, matches ++ clusterWith(e, edges), count + 1)
-    }
-
-    iter(edges.indices, BitSet.empty, 0)
+def countClusters(edges: Vector[Set[Int]]): Int = {
+  def iter(toProcess: Seq[Int], matches: BitSet, count: Int): Int = toProcess match {
+    case Nil => count
+    case e +: es if matches.contains(e) => iter(es, matches, count)
+    case e +: es => iter(es, matches ++ clusterWith(e, edges), count + 1)
   }
+
+  iter(edges.indices, BitSet.empty, 0)
+}
 
   def main(args: Array[String]): Unit = {
     def input = parseInput(Source.fromResource("day12input.txt").getLines())

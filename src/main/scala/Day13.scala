@@ -17,7 +17,11 @@ object Day13 {
 
   def calcSafeTrip(layers: Seq[Layer]): Int =
     Stream.from(0)
-      .filter(offset => !layers.exists(l => (l.depth + offset) % (2 * l.range - 2) == 0))
+      .filter(offset =>
+        layers.forall(l =>
+          (l.depth + offset) % (2 * l.range - 2) != 0
+        )
+      )
       .head
 
   def main(args: Array[String]): Unit = {
