@@ -21,14 +21,6 @@ object Day14 {
       .mkString("")
 
   def countRegions(key: String): Int = {
-    val matrix = Vector.iterate(0, 128)(_ + 1).map(i => drawBits(Day10.knotHash(s"$key-$i")))
-    val edgesWithMask: Vector[(Set[Int], Boolean)] = (for(x <- 0 to 127; y <- 0 to 127) yield {
-      (Set((-1, 0), (0, -1), (1, 0), (0,1)).collect {
-        case (dx, dy) if matrix.isDefinedAt(x + dx) && matrix(x + dx).isDefinedAt(y + dy) && matrix(x + dx)(y + dy) == matrix(x)(y)
-          => y + dy + 128 * (x + dx)
-      }, matrix(x)(y) == '1')
-    }).toVector
-
     def clusterWith(root: Int, edges: Vector[Set[Int]]): BitSet = {
       def iter(linkedEdges: Seq[Int], matches: BitSet): BitSet = linkedEdges match {
         case Nil => matches
@@ -48,6 +40,14 @@ object Day14 {
 
       iter(edges.indices.filter(e => mask(e)), BitSet.empty, 0)
     }
+
+    val matrix = Vector.iterate(0, 128)(_ + 1).map(i => drawBits(Day10.knotHash(s"$key-$i")))
+    val edgesWithMask: Vector[(Set[Int], Boolean)] = (for(x <- 0 to 127; y <- 0 to 127) yield {
+      (Set((-1, 0), (0, -1), (1, 0), (0,1)).collect {
+        case (dx, dy) if matrix.isDefinedAt(x + dx) && matrix(x + dx).isDefinedAt(y + dy) && matrix(x + dx)(y + dy) == matrix(x)(y)
+        => y + dy + 128 * (x + dx)
+      }, matrix(x)(y) == '1')
+    }).toVector
 
     val edges = edgesWithMask.map(_._1)
     val mask = edgesWithMask.map(_._2)
