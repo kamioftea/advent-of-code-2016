@@ -22,17 +22,17 @@ class Day15Test extends FunSuite with Matchers {
   }
 
   test("can compare bits") {
-    buildLSBChecker(5)((1092455, 430625591)) shouldBe false
-    buildLSBChecker(5)((1181022009, 1233683848)) shouldBe false
-    buildLSBChecker(5)((245556042, 1431495498)) shouldBe true
-    buildLSBChecker(5)((1744312007, 137874439)) shouldBe true
-    buildLSBChecker(5)((1352636452, 285222916)) shouldBe true
+    buildLSBComparator(5)((1092455, 430625591)) shouldBe false
+    buildLSBComparator(5)((1181022009, 1233683848)) shouldBe false
+    buildLSBComparator(5)((245556042, 1431495498)) shouldBe true
+    buildLSBComparator(5)((1744312007, 137874439)) shouldBe true
+    buildLSBComparator(5)((1352636452, 285222916)) shouldBe true
 
-    buildLSBChecker(16)((1092455, 430625591)) shouldBe false
-    buildLSBChecker(16)((1181022009, 1233683848)) shouldBe false
-    buildLSBChecker(16)((245556042, 1431495498)) shouldBe true
-    buildLSBChecker(16)((1744312007, 137874439)) shouldBe false
-    buildLSBChecker(16)((1352636452, 285222916)) shouldBe false
+    buildLSBComparator(16)((1092455, 430625591)) shouldBe false
+    buildLSBComparator(16)((1181022009, 1233683848)) shouldBe false
+    buildLSBComparator(16)((245556042, 1431495498)) shouldBe true
+    buildLSBComparator(16)((1744312007, 137874439)) shouldBe false
+    buildLSBComparator(16)((1352636452, 285222916)) shouldBe false
   }
 
   test("can count matches") {

@@ -3,7 +3,7 @@ object Day15 {
   def buildIterator(start: Int, factor: Long): Iterator[Int] =
     Iterator.iterate(start)(i => ((i * factor) % 2147483647).toInt).drop(1)
 
-  def buildLSBChecker(numBits: Int): ((Int, Int)) => Boolean = {
+  def buildLSBComparator(numBits: Int): ((Int, Int)) => Boolean = {
     val mask = (1 << numBits) - 1
 
     (p: (Int, Int)) => (p._1 & mask) == (p._2 & mask)
@@ -12,7 +12,7 @@ object Day15 {
   def countMatches(a: Iterator[Int], b: Iterator[Int], iterations: Int): Int = {
     a.take(iterations)
       .zip(b.take(iterations))
-      .count(buildLSBChecker(16))
+      .count(buildLSBComparator(16))
   }
 
   def filterIterator(start: Int, factor: Long, divisor: Int): Iterator[Int] =
