@@ -1,5 +1,3 @@
-import Day6.redistribute
-
 import scala.annotation.tailrec
 import scala.io.Source
 
@@ -25,11 +23,11 @@ object Day16 {
   def applyInstructions(instructions: Array[String], programs: Vector[Char]): Vector[Char] =
     instructions.foldLeft(programs){ case( ps, i) => applyInstruction(i, ps) }
 
-  def countLoopSize[T](sequence: Vector[T], update: Vector[T] => Vector[T]): (Int, Int, Map[Vector[T], Int]) = {
+  def countLoopSize[T](sequence: T, update: T => T): (Int, Int, Map[T, Int]) = {
     @tailrec
-    def iter(state: Vector[T],
-             seen: Map[Vector[T], Int] = Map.empty,
-             count: Int = 0): (Int, Int, Map[Vector[T], Int]) =
+    def iter(state: T,
+             seen: Map[T, Int] = Map.empty,
+             count: Int = 0): (Int, Int, Map[T, Int]) =
       if (seen.isDefinedAt(state)) (count, count - seen(state), seen)
       else iter(update(state), seen.updated(state, count), count + 1)
 
@@ -46,7 +44,9 @@ object Day16 {
   def main(args: Array[String]): Unit = {
     val input = Source.fromResource("day16input.txt").mkString.trim.split(',')
 
+    //noinspection SpellCheckingInspection
     println(applyInstructions(input, "abcdefghijklmnop".toVector).mkString)
+    //noinspection SpellCheckingInspection
     println(applyRepeatInstructions(1000000000, input, "abcdefghijklmnop".toVector).mkString)
 
 
