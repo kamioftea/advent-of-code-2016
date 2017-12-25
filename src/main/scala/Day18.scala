@@ -103,13 +103,11 @@ object Day18 {
                   term: Boolean = false,
                   target: Option[Char] = None)
 
-  def runConcurrent(program: Vector[Instruction]): (Prog, Prog) = {
-
+  def runConcurrent(program: Vector[Instruction]): Int  = {
     def runUntilRecv(prog: Prog, incoming: Seq[Long], outgoing: Seq[Long]): (Prog, Seq[Long]) =
       if (prog.term || !program.isDefinedAt(prog.position)) (prog.copy(term = true), outgoing)
       else program(prog.position) match {
         case Instruction("snd", r, _) =>
-          println(s"${prog.label} Send ${prog.registers(r)}")
           runUntilRecv(
             prog.copy(
               position = prog.position + 1,
@@ -179,7 +177,6 @@ object Day18 {
             outgoing
           )
         case Instruction("rcv", r, _) =>
-          println(s"${prog.label} rcv $incoming")
           incoming match {
             case i +: is => runUntilRecv(
               prog.copy(
@@ -194,8 +191,6 @@ object Day18 {
       }
 
     def iter(p0: Prog, p1: Prog, incoming: Seq[Long]): (Prog, Prog) = {
-      println(incoming)
-
       if (incoming == Nil && p0.target.isDefined) (p0, p1)
       else {
         val (newP0, outgoing) = incoming match {
@@ -214,11 +209,15 @@ object Day18 {
       }
     }
 
-    iter(
+    val (pa, pb) = iter(
       Prog("Prog 0", Map('p' -> 0l).withDefaultValue(0), 0),
       Prog("Prog 1", Map('p' -> 1l).withDefaultValue(0), 0),
       Nil
     )
+
+    val p1 = if(pa.label == "Prog 1") pa else pb
+
+    p1.sentCount
   }
 
   def main(args: Array[String]): Unit = {
@@ -226,29 +225,8 @@ object Day18 {
     val program = parseLines(Source.fromResource("day18input.txt").getLines())
 
     println(getRcv(program))
-    println(runConcurrent(parseLines(
-      """set x 1
-        |set y 2
-        |snd x
-        |snd y
-        |snd p
-        |rcv a
-        |rcv b
-        |rcv c
-        |rcv d""".stripMargin.lines)))
 
-    println(runConcurrent(parseLines(
-      """set y 10
-        |mul y p
-        |add y 10
-        |snd y
-        |rcv x
-        |add y -1
-        |jgz x -3
-        |rcv b""".stripMargin.lines)))
-
-
-   // println(runConcurrent(program))
+    println(runConcurrent(program))
     println(runInParallel(program))
   }
 }
@@ -276,14 +254,9 @@ object Program {
   def behavior(pid: Int, program: Vector[Instruction]): Behavior[Message] = {
 
     def run(state: State): Behavior[Message] = {
-      //      val state = xState.copy(count = xState.count + 1)
-      //      if(state.count > 100) return Actor.stopped
-
-      //      println(s"Program $pid : $state")
 
       if (!program.isDefinedAt(state.position)) {
         state.pairedWith ! Terminated
-        println(s"Program $pid Terminated, sent count: ${state.sentCount} state: $state")
         Actor.stopped
       }
       else program(state.position) match {
@@ -317,6 +290,8 @@ object Program {
           run(state.copy(position = state.position + v.getValue(state.registers).toInt))
         case Instruction("jgz", _, _) =>
           run(state.copy(position = state.position + 1))
+        case Instruction("jmp", _, i) =>
+          run(state.copy(position = state.position + i.getValue(state.registers).toInt))
         case Instruction("rcv", r, _) =>
           awaitMsg(state.copy(position = state.position + 1), r)
       }
@@ -324,7 +299,6 @@ object Program {
 
     def awaitMsg(state: State, target: Char): Behavior[Message] = {
       Actor.immutable[Message] { (_, msg) => {
-        println(s"Program $pid : $msg ${state.receivedCount} ${state.sentCount} $target ${state.registers}")
         //state.pairedWith ! Waiting(state.sentCount, state.receivedCount)
         msg match {
           case Send(value) =>
@@ -348,7 +322,6 @@ object Program {
     }
 
     Actor.immutable[Message] { (_, msg) => {
-      println(s"Program $pid : $msg")
       msg match {
         case Start(pair) => run(State(Map('p' -> pid.toLong).withDefaultValue(0), 0, pair, 0))
         case _ => Actor.same

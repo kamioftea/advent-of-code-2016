@@ -57,4 +57,16 @@ class Day18Test extends FunSuite with Matchers {
       Instruction("jgz", 'a', Literal(-2))
     )) shouldBe Some(4)
   }
+
+  test("run concurrent") {
+    runConcurrent(Vector(
+      Instruction("snd", 'p', EmptyValue),
+      Instruction("snd", 'p', EmptyValue),
+      Instruction("snd", 'p', EmptyValue),
+      Instruction("rcv", 'a', EmptyValue),
+      Instruction("rcv", 'b', EmptyValue),
+      Instruction("rcv", 'c', EmptyValue),
+      Instruction("rcv", 'd', EmptyValue)
+    )) shouldBe 3
+  }
 }
