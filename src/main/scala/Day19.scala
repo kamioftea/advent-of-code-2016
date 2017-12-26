@@ -3,7 +3,7 @@ import scala.io.Source
 object Day19 {
   def findStart(grid: Vector[String]): Int = {
     grid(0).indexOf('|')
-}
+  }
 
   def findPath(grid: Vector[String]): (String, Int) = {
     def canTravel(x: Int, y: Int): Boolean =

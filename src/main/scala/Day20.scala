@@ -38,13 +38,11 @@ object Day20 {
 
     val minAcc = input.minBy(_.acc)
 
-    //iter(input.filter(p => p.acc.mag == minAcc.acc.mag))
-
     def iterCollisions(particles: Seq[Particle], count: Long = 10000000): Unit = {
       val newParticles: Seq[Particle] =
         particles
           .groupBy(_.pos)
-          .filter {case (pos, ps) => ps.length == 1}
+          .filter {case (_, ps) => ps.lengthCompare(1) == 0}
           .flatMap(_._2)
           .map(_.next)
           .toSeq
