@@ -23,12 +23,12 @@ object Day22 {
 
       val status = grid.getOrElse(y, Map.empty).getOrElse(x, '.')
       val (ndx, ndy, nStatus) = infectionStrategy((dx, dy, status))
-      val newICount = if(nStatus == '#') infectionCount + 1 else infectionCount
+      val nICount = if(nStatus == '#') infectionCount + 1 else infectionCount
       iter(
         grid.updated(y, grid.getOrElse(y, Map.empty).updated(x, nStatus)),
         x + ndx, y + ndy,
         ndx, ndy,
-        count + 1, newICount
+        count + 1, nICount
       )
     }
 

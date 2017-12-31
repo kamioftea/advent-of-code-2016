@@ -12,7 +12,7 @@ class Day21Test extends FunSuite with Matchers {
     Vector("#.".toVector, "##".toVector).rot.rot.rot.rot shouldBe Vector("#.".toVector, "##".toVector)
   }
 
-  test("testParseInput") {
+  test("can parse input") {
     parseInput(Seq(
       "##/#. => .../.##/##.",
       "##/## => ###/#../#.."

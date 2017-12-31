@@ -3,7 +3,7 @@ import org.scalatest.{FunSuite, Matchers}
 
 class Day22Test extends FunSuite with Matchers {
 
-  test("testParseInput") {
+  test("can parse input") {
     parseInput(
       """..#
         |#..
@@ -15,7 +15,7 @@ class Day22Test extends FunSuite with Matchers {
     )
   }
 
-  test("testCountInfections") {
+  test("can count infections") {
     countInfections(
       Map(
         -1 -> Map(-1 -> '.', 0 -> '.', 1 -> '#'),
